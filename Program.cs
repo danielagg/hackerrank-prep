@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Text;
+
 plusMinus(new[] { -4, 3, -9, 0, 4, 1 }.ToList());
 miniMaxSum(new[] { 1, 3, 5, 7, 9 }.ToList());
 timeConversion("12:06:00PM");
@@ -16,6 +18,10 @@ diagonalDifference(new[]
 }.ToList());
 
 countingSort(new[] { 1, 1, 3, 2, 1 }.ToList());
+
+caesarCipher("There's a starman waiting in the sky", 3);
+
+palindromeIndex("aaab");
 
 Console.WriteLine("Bye!");
 
@@ -100,3 +106,52 @@ List<int> countingSort(List<int> arr)
 
     return res.ToList();
 }
+
+string caesarCipher(string s, int k)
+{
+    var alphaBet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+    
+    var res = new StringBuilder();
+    for (int i = 0; i < s.Length; i++)
+    {
+        var curr = Char.ToUpper(s[i]);
+
+        if (char.IsLetter(curr))
+        {
+            var index = Array.IndexOf(alphaBet, curr);
+            var newIndex = index + k;
+
+            if (newIndex >= alphaBet.Length)
+                newIndex = newIndex % alphaBet.Length;
+
+            res.Append(Char.IsUpper(s[i]) ? alphaBet[newIndex] : Char.ToLower(alphaBet[newIndex]));
+        }
+        else
+            res.Append(s[i]);
+    }
+
+    return res.ToString();
+}
+
+int palindromeIndex(string s)
+{
+    if (IsPalindrome(s))
+        return -1;
+
+    for (int i = 0; i < s.Length; i++)
+    {
+        var toRemove = s.Remove(i, 1);
+        if (IsPalindrome(toRemove))
+            return i;
+    }
+
+    return -1;
+
+    bool IsPalindrome(string s)
+    {
+        var copyS = s.ToCharArray();
+        Array.Reverse(copyS);
+        return s == new string(copyS);
+    }
+}
+
