@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Text;
+using HackerRankPrep;
 
 plusMinus(new[] { -4, 3, -9, 0, 4, 1 }.ToList());
 miniMaxSum(new[] { 1, 3, 5, 7, 9 }.ToList());
@@ -22,6 +23,10 @@ countingSort(new[] { 1, 1, 3, 2, 1 }.ToList());
 caesarCipher("There's a starman waiting in the sky", 3);
 
 palindromeIndex("aaab");
+
+gridChallenge(new[] { "eabcd", "fghij", "olkmn", "trpqs", "xywuv" }.ToList());
+
+MemoizedFibonacci();
 
 Console.WriteLine("Bye!");
 
@@ -155,3 +160,125 @@ int palindromeIndex(string s)
     }
 }
 
+string gridChallenge(List<string> grid)
+{
+    // sort words
+    var sortedGrid = new List<string>();
+    foreach (var word in grid)
+    {
+        var copy = word.ToCharArray();
+        Array.Sort(copy);
+        sortedGrid.Add(new string(copy));
+    }
+    
+    // check columns
+    var newGrid = new List<string>();
+    for (int i = 0; i < grid.First().Length; i++)
+    {
+        var temp = new StringBuilder();
+        foreach (var word in grid)
+            temp.Append(word[i]);
+        
+        newGrid.Add(temp.ToString());
+    }
+    
+    foreach (var word in newGrid)
+    {
+        var copy = word.ToCharArray();
+        Array.Sort(copy);
+        if (word != new string(copy))
+            return "NO";
+    }
+    
+    return "YES";
+}
+
+
+// var points = new[] {
+//     (0, 1), // up
+//     (1, 0), // right
+//     (0, -1), // down
+//     (-1, 0) // left
+// };
+//
+// var curr = (14, 5);
+// foreach (var point in points)
+// {
+//     var newPoint = (curr.Item1 + point.Item1, curr.Item2 + point.Item2);
+// }
+
+int Fib(int n, Dictionary<int, int> memo)
+{
+    if (n <= 1)
+        return 1;
+
+    if (memo.ContainsKey(n))
+        return n;
+    
+    var res = Fib(n - 1, memo) + Fib(n - 2, memo);
+    memo.Add(n, res);
+    return res;
+}
+
+void MemoizedFibonacci()
+{
+    Console.WriteLine(Fib(7, new Dictionary<int, int>()));
+}
+
+
+var node5 = new MyNode<int>(5, null);
+var node4 = new MyNode<int>(4, node5);
+var node3 = new MyNode<int>(3, node4);
+var node2 = new MyNode<int>(2, node3);
+var node1 = new MyNode<int>(1, node2);
+
+var reversedListHead = ReverseLinkedList(node1);
+Console.WriteLine(reversedListHead.ToString());
+
+MyNode<T> ReverseLinkedList<T>(MyNode<T> head)
+{
+    MyNode<T>? prev = null;
+    var current = head;
+
+    while (current != null)
+    {
+        var next = current.Next;
+        current = new MyNode<T>(current.Val, prev);
+        prev = current;
+        current = next;
+    }
+
+    return prev!;
+}
+
+var nums = new Dictionary<string, int>()
+{
+    { "I", 1 },
+    { "V", 5 },
+    { "X", 10 },
+    { "L", 50 },
+    { "C", 100 },
+    { "D", 500 },
+    { "M", 1000 },
+};
+
+var s = "CMXCVIII";
+
+var sum = 0;
+for (int i = 0; i < s.Length; i++)
+{
+    var curr = nums[s[i].ToString()];
+    if(i + 1 < s.Length)
+    {
+        var next = nums[s[i + 1].ToString()];
+
+        if (next > curr)
+            sum -= curr;
+        else
+            sum += curr;
+    }
+    else
+        sum += curr;
+}
+
+Console.WriteLine($"Roman numeral {s} is {sum} in decimal.");
