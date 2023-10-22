@@ -280,5 +280,20 @@ for (int i = 0; i < s.Length; i++)
     else
         sum += curr;
 }
-
 Console.WriteLine($"Roman numeral {s} is {sum} in decimal.");
+
+
+int FindShortestSubArray(int[] nums) {
+    var degrees = nums.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+    var maximums = degrees.Where(x => x.Value == degrees.Max(y => y.Value)).Select(x => x.Key).ToList();
+
+    var result = int.MaxValue;
+    foreach (var potential in maximums)
+    {
+        var first = Array.IndexOf(nums, potential);
+        var last = Array.LastIndexOf(nums, potential);
+        result = Math.Min(result, last - first + 1);
+    }
+
+    return result;
+}
